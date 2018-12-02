@@ -1,0 +1,25 @@
+<html>
+<head><title>Create Restaurant</title></head>
+<body>
+	<form action="/create" method="post" enctype="multipart/form-data">
+		Name: <input type="text" name="name" required><br>
+		Borough: <input type="text" name="borough"><br>
+		Cuisine: <input type="text" name="cuisine"><br>
+		Photo: <input type="file" name="photo" accept="image/*"><br>
+		<!--Photo Mimetype: <input type="" name="mimetype"><br>-->
+		Address:<br>
+		Street: <input type="text" name="street"><br>
+		Building: <input type="text" name="building"><br>
+		Zipcode: <input type="number" name="zipcode"><br>
+		GPS Coordinates (lon.): <input type="number" name="lon" step="any"><br>
+		GPS Coordinates (lat.): <input type="number" name="lat" step="any"><br>
+		Grades:<br>
+		<!--User: <input type="text" name="user"><br>-->
+		Score: <input type="number" name="score" min="1" max="10"><br>
+		Owner: <%=userName%><!--<input type="text" name="owner" required>--><br>
+	<input type="submit" value="Create">
+    </form>
+    <a href="/">Home</a>
+    <a href="/logout">Logout</a>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head><title>Result</title></head>
+    <body>
+        <h2>Search Result(s):</h2>
+        <ol>
+            <%for(var i in docs){%>
+            <li><a href="/display?_id=<%=docs[i]._id%>"><%= docs[i].name%></a></li>
+            <%}%>
+        </ol>
+        <a href="/search">New Search</a>
+        <a href="/">Home</a>
+        <a href="/logout">Logout</a>
+    </body>
+</html>

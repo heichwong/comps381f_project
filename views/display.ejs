@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head><title><%= docs[0].name%></title></head>
+  <body>
+  <h2><%= docs[0].name%></h2>
+  <%if(docs[0].mimetype != "application/octet-stream"){%>
+  <img src="data:<%= docs[0].mimetype%>;base64, <%= docs[0].photo%>"><br>
+  <%}%>
+  Cuisine: <%= docs[0].cuisine%><br>
+  Borough: <%= docs[0].borough%><br>
+  Zipcode: <%= docs[0].zipcode%><br>
+  Address: <%= docs[0].building%>, <%= docs[0].street%><br>
+  <%if(docs[0].lon != "" && docs[0].lat != "") {%>
+  <a href="https://www.google.com/maps/place/<%= docs[0].lon%>,<%= docs[0].lat%>">Display on Google Maps</a><br>
+  <%}%>
+  Score: <%= docs[1].avgScore%><br>
+  Owner: <%= docs[0].owner%><br>
+  <a href="/rate?name=<%=docs[0].name%>">Rate this restaurant</a>
+  <a href="/edit?name=<%=docs[0].name%>&_id=<%=docs[0]._id%>">Update restaurant details</a>
+  <a href="/remove?name=<%=docs[0].name%>">Remove this restaurant</a>
+  <a href="/">Home</a>
+  <a href="/logout">Logout</a>
+  </body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head><title>Update Restaurant</title></head>
+<body>
+<h2>Editting Restaurant</h2>
+<form action="/edit" method="post" enctype="multipart/form-data">
+		Name: <input type="text" name="name" value="<%=docs[0].name%>" required><br>
+		Borough: <input type="text" name="borough" value="<%=docs[0].borough%>"><br>
+		Cuisine: <input type="text" name="cuisine" value="<%=docs[0].cuisine%>"><br>
+		Photo: <input type="file" name="photo" accept="image/*"><br>
+		<!--Photo Mimetype: <input type="" name="mimetype"><br>-->
+		Address:<br>
+		Street: <input type="text" name="street" value="<%=docs[0].street%>"><br>
+		Building: <input type="text" name="building" value="<%=docs[0].building%>"><br>
+		Zipcode: <input type="number" name="zipcode" value="<%=docs[0].zipcode%>"><br>
+		GPS Coordinates (lon.): <input type="number" name="lon" step="any" value="<%=docs[0].lon%>"><br>
+		GPS Coordinates (lat.): <input type="number" name="lat" step="any" value="<%=docs[0].lat%>"><br>
+		Owner: <%=docs[0].owner%><br>
+	<input type="submit" value="Update">
+	</form>
+</body>
+</html>

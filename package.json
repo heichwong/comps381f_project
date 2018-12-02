@@ -1,0 +1,18 @@
+{
+    "name": "server",
+    "description": "COMPS381F mini project",
+    "author": "ouitdogs",
+    "version": "0.0.1",
+    "dependencies": {
+        "express": "*",
+        "ejs": "*",
+        "body-parser": "*",
+        "cookie-session": "*",
+        "formidable": "latest",
+	    "mongodb": "2.2.33"
+    },
+    "engine": "node >= 0.10.0",
+    "scripts": {
+        "start": "node server"
+    }
+}

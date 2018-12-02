@@ -1,0 +1,13 @@
+<html><head><title>Restaurant list</title></head>
+<body><H1>Restaurants</H1>
+<h2>Showing <%= docs.length%> document(s)</h2>
+<a href="/create">Create New Restaurant</a><br>
+<a href="/search">Search for Restaurant</a><br>
+<a href="/logout">Logout</a><br>
+  <ol>
+    <%for(var i in docs){%>
+    <li><a href="/display?_id=<%=docs[i]._id%>"><%= docs[i].name%></a></li>
+    <%}%>
+  </ol>
+  </body>
+</html>
