@@ -1,15 +1,9 @@
 # COMPS381F Mini Project
 
-### Installing
-```
-npm install
-```
-### Running
-```
-npm start
-```
-### Testing
-Go to http://localhost:8099
+## Authors
+Tai Kam Cheung sid: 11657304
+Tang Wai Leung sid: 11659997
+Wong Cheuk Hei sid: 11656541
 
 ### Cloud App
-Go to https://projthegeeks.herokuapp.com/
+Go to https://projthegeeks.mybluemix.net/
