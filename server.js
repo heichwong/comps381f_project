@@ -218,6 +218,7 @@ app.get('/edit', function(req,res) {
 			} else {
 				res.render('edit', {docs:restaurant});
 				req.session.objId = req.query._id;
+				req.session.restaurantname = restaurant[0].name
 			}
 		});
 	});
@@ -250,7 +251,7 @@ app.post('/edit', function(req,res){
 		}
 
 		MongoClient.connect(mongourl,function(err,db){
-			db.collection('documents').updateOne({"_id":ObjectID(req.session.objId)},editDoc,function(err,res){
+			db.collection('documents').updateOne({"name":req.session.restaurantname},editDoc,function(err,res){
 				if (err) throw err;
 			})
 				db.close();
@@ -261,7 +262,7 @@ app.post('/edit', function(req,res){
 });
 //---------------------UPDATE RESTAURANT:end>
 //<--------------------REMOVE RESTAURANT:begin
-app.get('/remove', function(req, res){
+/*app.get('/remove', function(req, res){
 	MongoClient.connect(mongourl, function(err,db){
 		try{
 			assert.equal(err,null);
@@ -295,6 +296,43 @@ app.post('/remove', function(req,res){
 		})
 	db.close();
 	});
+});*/
+		//remove by name
+app.get('/remove', function(req, res){
+	MongoClient.connect(mongourl, function(err,db){
+		try{
+			assert.equal(err,null);
+		} catch(err) {
+			console.log('Connection failed');
+		}
+		var criteria = {}
+		criteria['_id'] = ObjectID(req.query._id);
+		getRestaurant(db,criteria,function(restaurant){
+		if(req.session.username!=restaurant[0].owner){
+			res.render('cannotEdit', {docs:restaurant});
+		} else {
+			res.render('remove', {docs:restaurant});
+			req.session.objId = req.query._id;
+			req.session.restaurantname = restaurant[0].name;
+		}
+		db.close();
+		})
+	})
+})
+
+app.post('/remove', function(req,res){
+	MongoClient.connect(mongourl, function(err,db){
+	try{
+		assert.equal(err,null);
+	} catch(err) {
+		console.log('Connection failed');
+	}
+	db.collection('documents').deleteOne({"name":req.session.restaurantname},function(err,obj){
+		if(err) throw err;
+		res.redirect('/')
+		})
+	db.close();
+	});
 });
 //---------------------REMOVE RESTAURANT:end>
 //<--------------------RATING RESTAURANT:begin
@@ -314,6 +352,7 @@ app.get('/rate', function(req,res){
 		} else {
 			res.render('rate',{docs:restaurant});
 			req.session.objId = req.query._id;
+			req.session.restaurantname = restaurant[0].name;
 		}
 		db.close();
 		})
@@ -333,7 +372,7 @@ app.post('/rate', function(req,res){
 		var userRate = {$push: documents}
 		documents['user'] = currentUser;
 		documents['score'] = score;
-		db.collection('documents').updateOne({"_id":ObjectID(req.session.objId)},userRate,function(err,res){
+		db.collection('documents').updateOne({"name":req.session.restaurantname},userRate,function(err,res){
 			if(err) throw err;
 		})
 		db.close();
