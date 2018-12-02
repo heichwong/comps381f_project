@@ -64,9 +64,9 @@ app.get('/display', function(req,res){
 		var criteria = {}
 		var score = 0;
 		criteria['_id'] = ObjectID(req.query._id);
+		console.log(criteria);
 		getRestaurant(db,criteria,function(restaurant){
 			db.close();
-			var image = new Buffer(restaurant[0].photo,'base64');
 			var contentType = {};
 			contentType['Content-Type'] = restaurant[0].mimetype;
 			for(var i=0;i<restaurant[0].score.length;i++){
@@ -203,7 +203,6 @@ app.post('/create',function(req,res){
 //---------------------CREATE RESTAURANT:end>
 //<--------------------UPDATE RESTAURANT:begin
 app.get('/edit', function(req,res) {
-	//console.log(req.session);
 		MongoClient.connect(mongourl, function(err,db){
 		try{
 			assert.equal(err,null);
@@ -211,17 +210,14 @@ app.get('/edit', function(req,res) {
 			console.log('Connection failed');
 		}
 		var criteria = {};
-		criteria['name'] = req.query.name;
+		criteria['_id'] = ObjectID(req.query._id);
 		getRestaurant(db,criteria,function(restaurant){
 			db.close();
-			var image = new Buffer(restaurant[0].photo,'base64');
-			var contentType = {};
-			contentType['Content-Type'] = restaurant[0].mimetype;
 			if(req.session.username!=restaurant[0].owner){
 				res.render('cannotEdit', {docs:restaurant});
 			} else {
 				res.render('edit', {docs:restaurant});
-				req.session.restaurantName = req.query.name;
+				req.session.objId = req.query._id;
 			}
 		});
 	});
@@ -230,9 +226,7 @@ app.get('/edit', function(req,res) {
 app.post('/edit', function(req,res){
 	var documents = {};
 	var form = new formidable.IncomingForm();
-	var criteria ={};
 	var editDoc = {$set: documents}
-	criteria['name'] = req.session.restaurantName;
 	form.parse(req,function(err,fields,files){
 		console.log(JSON.stringify(files));
 		var filename = files.photo.path;
@@ -249,14 +243,14 @@ app.post('/edit', function(req,res){
 		documents['lon'] = fields.lon;
 		documents['lat'] = fields.lat;
 		if(mimetype != 'application/octet-stream'){
-		fs.readFile(filename,function(err,data){
-			documents['mimetype'] = mimetype;
-			documents['photo'] = new Buffer(data).toString('base64');
-		});
+				fs.readFile(filename,function(err,data){
+				documents['mimetype'] = mimetype;
+				documents['photo'] = new Buffer(data).toString('base64');
+			});
 		}
 
 		MongoClient.connect(mongourl,function(err,db){
-			db.collection('documents').updateOne(criteria,editDoc,function(err,res){
+			db.collection('documents').updateOne({"_id":ObjectID(req.session.objId)},editDoc,function(err,res){
 				if (err) throw err;
 			})
 				db.close();
@@ -275,14 +269,13 @@ app.get('/remove', function(req, res){
 			console.log('Connection failed');
 		}
 		var criteria = {}
-		var currentUser = req.session.username;
-		criteria['name'] = req.query.name;
+		criteria['_id'] = ObjectID(req.query._id);
 		getRestaurant(db,criteria,function(restaurant){
 		if(req.session.username!=restaurant[0].owner){
 			res.render('cannotEdit', {docs:restaurant});
 		} else {
 			res.render('remove', {docs:restaurant});
-			req.session.restaurantName = req.query.name;
+			req.session.objId = req.query._id;
 		}
 		db.close();
 		})
@@ -296,10 +289,7 @@ app.post('/remove', function(req,res){
 	} catch(err) {
 		console.log('Connection failed');
 	}
-	var criteria = {};
-	criteria['name'] = req.session.restaurantName;
-	console.log(criteria);
-	db.collection('documents').deleteOne(criteria,function(err,obj){
+	db.collection('documents').deleteOne({"_id":ObjectID(req.session.objId)},function(err,obj){
 		if(err) throw err;
 		res.redirect('/')
 		})
@@ -317,14 +307,13 @@ app.get('/rate', function(req,res){
 		}
 		var criteria = {}
 		var currentUser = req.session.username;
-		criteria['name'] = req.query.name;
+		criteria['_id'] = ObjectID(req.query._id);
 		getRestaurant(db,criteria,function(restaurant){
 		if(restaurant[0].user.indexOf(currentUser) != -1){
 			res.render('rated',{docs:restaurant});
-			console.log('Each user can only rate ONCE!')
 		} else {
 			res.render('rate',{docs:restaurant});
-			req.session.restaurantName = req.query.name;
+			req.session.objId = req.query._id;
 		}
 		db.close();
 		})
@@ -338,15 +327,13 @@ app.post('/rate', function(req,res){
 		} catch(err) {
 			console.log('Connection failed');
 		}
-		var criteria = {};
-		criteria['name'] = req.session.restaurantName;
 		var documents = {};
 		var currentUser = req.session.username;
 		var score = req.body.score;
 		var userRate = {$push: documents}
 		documents['user'] = currentUser;
 		documents['score'] = score;
-		db.collection('documents').updateOne(criteria,userRate,function(err,res){
+		db.collection('documents').updateOne({"_id":ObjectID(req.session.objId)},userRate,function(err,res){
 			if(err) throw err;
 		})
 		db.close();

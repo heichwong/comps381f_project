@@ -15,9 +15,9 @@
   <%}%>
   Score: <%= docs[1].avgScore%><br>
   Owner: <%= docs[0].owner%><br>
-  <a href="/rate?name=<%=docs[0].name%>">Rate this restaurant</a>
-  <a href="/edit?name=<%=docs[0].name%>&_id=<%=docs[0]._id%>">Update restaurant details</a>
-  <a href="/remove?name=<%=docs[0].name%>">Remove this restaurant</a>
+  <a href="/rate?_id=<%=docs[0]._id%>">Rate this restaurant</a>
+  <a href="/edit?_id=<%=docs[0]._id%>">Update restaurant details</a>
+  <a href="/remove?_id=<%=docs[0]._id%>">Remove this restaurant</a>
   <a href="/">Home</a>
   <a href="/logout">Logout</a>
   </body>
