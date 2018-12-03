@@ -70,6 +70,7 @@ app.get('/display', function(req,res){
 			db.close();
 			var contentType = {};
 			contentType['Content-Type'] = restaurant[0].mimetype;
+			if (restaurant[0].score){
 			for(var i=0;i<restaurant[0].score.length;i++){
 				score+=parseInt(restaurant[0].score[i]);
 			}
@@ -79,7 +80,12 @@ app.get('/display', function(req,res){
 			score=score/restaurant[0].user.length
 			}
 			var avgScore=score.toString()
+		
 			restaurant.push({avgScore})
+		}
+		 else {avgScore = 0
+			 restaurant.push(avgScore)
+			}
 			res.render('display', {docs:restaurant});
 		});
 	});
@@ -447,21 +453,9 @@ app.get('/api/restaurant/cuisine/:cuisine', function(req,res){
 	/*#note that the browser cannot handle POST request, 
 	the json of the new restaurant would be hard coded here.*/
 app.post('/api/restaurant', function(req,res){
-	var newRestaurant = {
-		"name": "testForAPI",
-		"borough": "ouhk",
-		"cuisine": "COMPS381F",
-		"street": "ou",
-		"building": "hk",
-		"zipcode": "123",
-		"lon": "123",
-		"lat": "123",
-		"score": [],
-		"user": [],
-		"owner": "student",
-		"mimetype": "application/octet-stream",
-		"photo": ""
-	}
+	console.log(req.body);
+	var newRestaurant = req.body;
+	
 
 	MongoClient.connect(mongourl,function(err,db){
 		try{
