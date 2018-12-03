@@ -178,7 +178,7 @@ app.post('/create',function(req,res){
 		documents['zipcode'] = fields.zipcode;
 		documents['lon'] = fields.lon;
 		documents['lat'] = fields.lat;
-		documents['score'] = [fields.score]; 
+		documents['score'] = [fields.score];
 		if(fields.score!=""){
 			documents['user'] = [req.session.username]; 
 			documents['score'] = [fields.score]; 
@@ -187,9 +187,12 @@ app.post('/create',function(req,res){
 				}
 		documents['owner'] = req.session.username;
 		
+
 		fs.readFile(filename,function(err,data){
 			documents['mimetype'] = mimetype;
+			if(/image/.test(mimetype)) {
 			documents['photo'] = new Buffer(data).toString('base64');
+			} else {documents['photo'] = ""}
 			MongoClient.connect(mongourl,function(err,db){
 				db.collection('documents').insertOne(documents,function(err,result){
 					console.log("Inserted!\n");
@@ -246,7 +249,9 @@ app.post('/edit', function(req,res){
 		if(mimetype != 'application/octet-stream'){
 				fs.readFile(filename,function(err,data){
 				documents['mimetype'] = mimetype;
+				if(/image/.test(mimetype)){
 				documents['photo'] = new Buffer(data).toString('base64');
+				}
 			});
 		}
 
