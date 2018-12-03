@@ -12,13 +12,14 @@ var mongourl = 'mongodb://dev:dev381@ds151402.mlab.com:51402/heiheiwong';
 
 var SECRETKEY1 = 'I want to pass COMPS381F';
 var SECRETKEY2 = 'Keep this to yourself';
+var SECRETKEY3 = ""
 
 app = express();
 app.set('view engine','ejs');
 
 app.use(session({
   name: 'session',
-  keys: [SECRETKEY1,SECRETKEY2]
+  keys: [SECRETKEY1,SECRETKEY2,SECRETKEY3]
 }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -219,9 +220,9 @@ app.get('/edit', function(req,res) {
 			if(req.session.username!=restaurant[0].owner){
 				res.render('cannotEdit', {docs:restaurant});
 			} else {
-				res.render('edit', {docs:restaurant});
 				req.session.objId = req.query._id;
-				req.session.restaurantname = restaurant[0].name
+				req.session.restaurantname = req.query.name
+				res.render('edit', {docs:restaurant});
 			}
 		});
 	});
@@ -316,9 +317,10 @@ app.get('/remove', function(req, res){
 		if(req.session.username!=restaurant[0].owner){
 			res.render('cannotEdit', {docs:restaurant});
 		} else {
-			res.render('remove', {docs:restaurant});
+			
 			req.session.objId = req.query._id;
-			req.session.restaurantname = restaurant[0].name;
+			req.session.restaurantname = req.query.name;
+			res.render('remove', {docs:restaurant});
 		}
 		db.close();
 		})
@@ -355,9 +357,10 @@ app.get('/rate', function(req,res){
 		if(restaurant[0].user.indexOf(currentUser) != -1){
 			res.render('rated',{docs:restaurant});
 		} else {
-			res.render('rate',{docs:restaurant});
+			
 			req.session.objId = req.query._id;
-			req.session.restaurantname = restaurant[0].name;
+			req.session.restaurantname = req.query.name;
+			res.render('rate',{docs:restaurant});
 		}
 		db.close();
 		})
