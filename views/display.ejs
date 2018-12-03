@@ -3,7 +3,7 @@
   <head><title><%= docs[0].name%></title></head>
   <body>
   <h2><%= docs[0].name%></h2>
-  <%if(docs[0].mimetype != "application/octet-stream"){%>
+  <%if(/image/.test(docs[0].mimetype)){%>
   <img src="data:<%= docs[0].mimetype%>;base64, <%= docs[0].photo%>"><br>
   <%}%>
   Cuisine: <%= docs[0].cuisine%><br>
